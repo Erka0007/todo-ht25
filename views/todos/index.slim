@@ -1,0 +1,20 @@
+
+
+
+
+h1 Att göra:
+form action="/todos/new" method="get" 
+    input type="submit" value="lägg till en ny sak att göra"
+hr
+- @todo.each do |tod|
+    h3 
+        a href="/todos/#{tod["id"]}/edit" style="color:black"
+           | #{tod["name"]}
+
+    p Beskrivning: #{tod["description"]}
+
+    form action="/todos/#{tod["id"]}/delete" method="post" 
+        input type="submit" value="Ta bort"
+
+    hr
+  

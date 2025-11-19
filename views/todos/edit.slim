@@ -1,0 +1,8 @@
+h3 Uppdatera din todo
+
+form action="/todos/#{@selected_todo["id"]}/update" method="post" 
+    input type="text" name="name" value="#{@selected_todo["name"]}"
+    hr
+    input type="text" name="description" value="#{@selected_todo["description"]}"
+    hr 
+    input type="submit" value="updatera"
