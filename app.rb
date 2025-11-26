@@ -7,7 +7,8 @@ get("/") do
   db = SQLite3::Database.new("db/todos.db")
   db.results_as_hash = true
  
-  @todo = db.execute("SELECT * FROM todos")
+  @todo = db.execute("SELECT * FROM todos WHERE done = 0")
+  @donetodo = db.execute("SELECT * FROM todos WHERE done = 1")
  #query = params[:q]
  #if query && !query.empty?
   # @todo = db.execute("SELECT * FROM todos WHERE name LIKE ? ","%#{query}%")
@@ -19,7 +20,6 @@ end
 
 get("/todos/:id/edit") do
   id = params[:id].to_i
-
   db = SQLite3::Database.new("db/todos.db")
   db.results_as_hash = true
   @selected_todo = db.execute("SELECT * FROM todos WHERE id = ?", id).first
@@ -39,9 +39,25 @@ get('/todos/new') do
 end
 post('/todo') do
   new_todo = params[:new_todo] # Hämta datan ifrån formuläret
-  description = params[:description].to_i 
+  description = params[:description]
   db = SQLite3::Database.new('db/todos.db') # koppling till databasen
-  db.execute("INSERT INTO todos (name, description) VALUES (?,?)",[new_todo, description])
+  db.execute("INSERT INTO todos (name, description, done) VALUES (?,?,?)",[new_todo, description, 0])
+  redirect('/') # Hoppa till routen som visar upp alla frukter
+ 
+end
+   
+post('/todos/:id/done') do
+  db = SQLite3::Database.new('db/todos.db') # koppling till databasen
+  id = params[:id].to_i
+  db.execute("UPDATE todos SET done=? WHERE id=?", [1, id])
+  redirect('/') # Hoppa till routen som visar upp alla frukter
+ 
+end
+
+post('/todos/:id/notDone') do
+  db = SQLite3::Database.new('db/todos.db') # koppling till databasen
+  id = params[:id].to_i
+  db.execute("UPDATE todos SET done=? WHERE id=?", [0, id])
   redirect('/') # Hoppa till routen som visar upp alla frukter
  
 end
@@ -51,7 +67,7 @@ post("/todos/:id/update") do
   id = params[:id].to_i
   name = params[:name]
   description = params[:description]
-  db.execute("UPDATE todos SET name=?, description=? WHERE id=?", [name, description, id])
+  db.execute("UPDATE todos SET name=?, description=?, done=? WHERE id=?", [name, description, 0, id])
   redirect("/")
 end
 

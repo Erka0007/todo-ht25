@@ -1,20 +1,40 @@
 
 
-
+form action="/todo" method="post"
+ input type="text" name="new_todo" placeholder="Namnge ny uppgift"
+ input type="text" name="description" placeholder="beskriv"
+ input type="submit" value="Lägg till"
 
 h1 Att göra:
-form action="/todos/new" method="get" 
-    input type="submit" value="lägg till en ny sak att göra"
 hr
 - @todo.each do |tod|
-    h3 
-        a href="/todos/#{tod["id"]}/edit" style="color:black"
-           | #{tod["name"]}
+    h3 #{tod["name"]}
 
     p Beskrivning: #{tod["description"]}
-
+    
     form action="/todos/#{tod["id"]}/delete" method="post" 
         input type="submit" value="Ta bort"
 
+    form action="/todos/#{tod["id"]}/edit" method="get" 
+        input type="submit" value="ändra"
+  
+    form action="/todos/#{tod["id"]}/done" method="post" 
+        input type="submit" value="klar"
+    hr
+h1 Klara:
+hr
+- @donetodo.each do |tod|
+    h3 #{tod["name"]}
+
+    p Beskrivning: #{tod["description"]}
+    
+    form action="/todos/#{tod["id"]}/delete" method="post" 
+        input type="submit" value="Ta bort"
+
+    form action="/todos/#{tod["id"]}/edit" method="get" 
+        input type="submit" value="ändra"
+
+    form action="/todos/#{tod["id"]}/notDone" method="post" 
+        input type="submit" value="inte klar"
     hr
   
